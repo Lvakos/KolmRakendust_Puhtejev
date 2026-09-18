@@ -7,36 +7,39 @@ namespace KolmRakendust_Puhtejev
 {
     public partial class mathMang : Form
     {
-        // Random number generator
         Random randomizer = new Random();
 
-        // Addition
         int addend1;
         int addend2;
 
-        // Subtraction
         int minuend;
         int subtrahend;
 
-        // Multiplication
         int multiplicand;
         int multiplier;
 
-        // Division
         int dividend;
         int divisor;
 
-        // Remaining time
         int timeLeft;
+        int score;
+        int difficultyMultiplier;
 
-        // Controls
+        string currentDifficulty;
+
         Label timeLabel;
+        Label scoreLabel;
+        Label difficultyLabel;
+
         Label plusLeftLabel;
         Label plusRightLabel;
+
         Label minusLeftLabel;
         Label minusRightLabel;
+
         Label timesLeftLabel;
         Label timesRightLabel;
+
         Label dividedLeftLabel;
         Label dividedRightLabel;
 
@@ -46,49 +49,86 @@ namespace KolmRakendust_Puhtejev
         NumericUpDown quotient;
 
         Button startButton;
+        ComboBox difficultyComboBox;
+
         System.Windows.Forms.Timer timer1;
 
         public mathMang()
         {
             InitializeComponent();
-
             CreateMathQuizUI();
         }
 
         private void CreateMathQuizUI()
         {
-            // Form
-            this.Text = "Math Quiz";
-            this.Size = new Size(500, 450);
+            this.Text = "Matemaatiline Mäng";
+            this.Size = new Size(550, 520);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.Fixed3D;
             this.MaximizeBox = false;
 
-            Label timeTextLabel = new Label();
-            timeTextLabel.Text = "Time Left";
-            timeTextLabel.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-            timeTextLabel.AutoSize = true;
-            timeTextLabel.Location = new Point(300, 25);
+            Label titleLabel = new Label();
+            titleLabel.Text = "MATEMAATILINE MÄNG";
+            titleLabel.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
+            titleLabel.AutoSize = true;
+            titleLabel.Location = new Point(120, 15);
+            this.Controls.Add(titleLabel);
 
+            difficultyLabel = new Label();
+            difficultyLabel.Text = "Raskus:";
+            difficultyLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            difficultyLabel.AutoSize = true;
+            difficultyLabel.Location = new Point(45, 70);
+            this.Controls.Add(difficultyLabel);
+
+            difficultyComboBox = new ComboBox();
+            difficultyComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            difficultyComboBox.Font = new Font("Segoe UI", 11F);
+            difficultyComboBox.Items.Add("Lihtne");
+            difficultyComboBox.Items.Add("Keskmine");
+            difficultyComboBox.Items.Add("Raske");
+            difficultyComboBox.SelectedIndex = 0;
+            difficultyComboBox.Size = new Size(130, 30);
+            difficultyComboBox.Location = new Point(120, 65);
+            this.Controls.Add(difficultyComboBox);
+
+            Label scoreTextLabel = new Label();
+            scoreTextLabel.Text = "Punktid:";
+            scoreTextLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            scoreTextLabel.AutoSize = true;
+            scoreTextLabel.Location = new Point(285, 70);
+            this.Controls.Add(scoreTextLabel);
+
+            scoreLabel = new Label();
+            scoreLabel.Text = "0";
+            scoreLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            scoreLabel.AutoSize = true;
+            scoreLabel.Location = new Point(355, 70);
+            this.Controls.Add(scoreLabel);
+
+            Label timeTextLabel = new Label();
+            timeTextLabel.Text = "Aeg:";
+            timeTextLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            timeTextLabel.AutoSize = true;
+            timeTextLabel.Location = new Point(285, 105);
             this.Controls.Add(timeTextLabel);
 
             timeLabel = new Label();
-            timeLabel.Text = "30 sekundit";
-            timeLabel.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            timeLabel.Text = "60 sekundit";
+            timeLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             timeLabel.AutoSize = true;
-            timeLabel.Location = new Point(300, 55);
-            timeLabel.BackColor = Color.White;
+            timeLabel.Location = new Point(330, 105);
+            timeLabel.BackColor = Color.LightGreen;
             timeLabel.Padding = new Padding(5);
-
             this.Controls.Add(timeLabel);
 
-            plusLeftLabel = CreateNumberLabel(50, 110);
-            plusRightLabel = CreateNumberLabel(170, 110);
+            plusLeftLabel = CreateNumberLabel(50, 160);
+            plusRightLabel = CreateNumberLabel(180, 160);
 
-            Label plusSign = CreateOperatorLabel("+", 115, 110);
-            Label plusEquals = CreateOperatorLabel("=", 230, 110);
+            Label plusSign = CreateOperatorLabel("+", 125, 160);
+            Label plusEquals = CreateOperatorLabel("=", 240, 160);
 
-            sum = CreateAnswerBox(270, 105);
+            sum = CreateAnswerBox(290, 155);
 
             this.Controls.Add(plusLeftLabel);
             this.Controls.Add(plusRightLabel);
@@ -96,13 +136,13 @@ namespace KolmRakendust_Puhtejev
             this.Controls.Add(plusEquals);
             this.Controls.Add(sum);
 
-            minusLeftLabel = CreateNumberLabel(50, 165);
-            minusRightLabel = CreateNumberLabel(170, 165);
+            minusLeftLabel = CreateNumberLabel(50, 215);
+            minusRightLabel = CreateNumberLabel(180, 215);
 
-            Label minusSign = CreateOperatorLabel("-", 115, 165);
-            Label minusEquals = CreateOperatorLabel("=", 230, 165);
+            Label minusSign = CreateOperatorLabel("-", 125, 215);
+            Label minusEquals = CreateOperatorLabel("=", 240, 215);
 
-            difference = CreateAnswerBox(270, 160);
+            difference = CreateAnswerBox(290, 210);
 
             this.Controls.Add(minusLeftLabel);
             this.Controls.Add(minusRightLabel);
@@ -110,13 +150,13 @@ namespace KolmRakendust_Puhtejev
             this.Controls.Add(minusEquals);
             this.Controls.Add(difference);
 
-            timesLeftLabel = CreateNumberLabel(50, 220);
-            timesRightLabel = CreateNumberLabel(170, 220);
+            timesLeftLabel = CreateNumberLabel(50, 270);
+            timesRightLabel = CreateNumberLabel(180, 270);
 
-            Label timesSign = CreateOperatorLabel("×", 115, 220);
-            Label timesEquals = CreateOperatorLabel("=", 230, 220);
+            Label timesSign = CreateOperatorLabel("×", 125, 270);
+            Label timesEquals = CreateOperatorLabel("=", 240, 270);
 
-            product = CreateAnswerBox(270, 215);
+            product = CreateAnswerBox(290, 265);
 
             this.Controls.Add(timesLeftLabel);
             this.Controls.Add(timesRightLabel);
@@ -124,13 +164,13 @@ namespace KolmRakendust_Puhtejev
             this.Controls.Add(timesEquals);
             this.Controls.Add(product);
 
-            dividedLeftLabel = CreateNumberLabel(50, 275);
-            dividedRightLabel = CreateNumberLabel(170, 275);
+            dividedLeftLabel = CreateNumberLabel(50, 325);
+            dividedRightLabel = CreateNumberLabel(180, 325);
 
-            Label dividedSign = CreateOperatorLabel("÷", 115, 275);
-            Label dividedEquals = CreateOperatorLabel("=", 230, 275);
+            Label dividedSign = CreateOperatorLabel("÷", 125, 325);
+            Label dividedEquals = CreateOperatorLabel("=", 240, 325);
 
-            quotient = CreateAnswerBox(270, 270);
+            quotient = CreateAnswerBox(290, 320);
 
             this.Controls.Add(dividedLeftLabel);
             this.Controls.Add(dividedRightLabel);
@@ -139,18 +179,15 @@ namespace KolmRakendust_Puhtejev
             this.Controls.Add(quotient);
 
             startButton = new Button();
-
-            startButton.Text = "Alusta mängida!";
-            startButton.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-            startButton.Size = new Size(200, 50);
-            startButton.Location = new Point(140, 340);
-            startButton.BackColor = Color.LightSkyBlue;
+            startButton.Text = "Alusta mängu!";
+            startButton.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
+            startButton.Size = new Size(220, 50);
+            startButton.Location = new Point(155, 390);
+            startButton.BackColor = Color.LightGreen;
             startButton.Click += startButton_Click;
-
             this.Controls.Add(startButton);
 
             timer1 = new System.Windows.Forms.Timer();
-
             timer1.Interval = 1000;
             timer1.Tick += timer1_Tick;
 
@@ -170,86 +207,118 @@ namespace KolmRakendust_Puhtejev
         private Label CreateNumberLabel(int x, int y)
         {
             Label label = new Label();
-
             label.Text = "?";
+            label.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
             label.Size = new Size(60, 40);
             label.Location = new Point(x, y);
             label.TextAlign = ContentAlignment.MiddleCenter;
-
             return label;
         }
 
         private Label CreateOperatorLabel(string text, int x, int y)
         {
             Label label = new Label();
-
             label.Text = text;
+            label.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
             label.Size = new Size(40, 40);
             label.Location = new Point(x, y);
             label.TextAlign = ContentAlignment.MiddleCenter;
-
             return label;
         }
 
         private NumericUpDown CreateAnswerBox(int x, int y)
         {
             NumericUpDown box = new NumericUpDown();
-
+            box.Font = new Font("Segoe UI", 16F);
             box.Size = new Size(90, 35);
             box.Location = new Point(x, y);
-
             box.Minimum = 0;
-            box.Maximum = 1000;
+            box.Maximum = 10000;
             box.Value = 0;
-
             return box;
         }
 
         public void StartTheQuiz()
         {
-            addend1 = randomizer.Next(51);
-            addend2 = randomizer.Next(51);
+            score = 0;
+            scoreLabel.Text = "0";
+
+            currentDifficulty = difficultyComboBox.SelectedItem.ToString();
+
+            if (currentDifficulty == "Lihtne")
+            {
+                difficultyMultiplier = 1;
+                timeLeft = 60;
+
+                addend1 = randomizer.Next(1, 21);
+                addend2 = randomizer.Next(1, 21);
+
+                minuend = randomizer.Next(10, 51);
+                subtrahend = randomizer.Next(1, minuend);
+
+                multiplicand = randomizer.Next(1, 6);
+                multiplier = randomizer.Next(1, 6);
+
+                divisor = randomizer.Next(2, 6);
+                int temporaryQuotient = randomizer.Next(1, 6);
+                dividend = divisor * temporaryQuotient;
+            }
+            else if (currentDifficulty == "Keskmine")
+            {
+                difficultyMultiplier = 2;
+                timeLeft = 45;
+
+                addend1 = randomizer.Next(10, 101);
+                addend2 = randomizer.Next(10, 101);
+
+                minuend = randomizer.Next(50, 201);
+                subtrahend = randomizer.Next(10, minuend);
+
+                multiplicand = randomizer.Next(2, 13);
+                multiplier = randomizer.Next(2, 13);
+
+                divisor = randomizer.Next(2, 13);
+                int temporaryQuotient = randomizer.Next(2, 13);
+                dividend = divisor * temporaryQuotient;
+            }
+            else
+            {
+                difficultyMultiplier = 3;
+                timeLeft = 30;
+
+                addend1 = randomizer.Next(100, 501);
+                addend2 = randomizer.Next(100, 501);
+
+                minuend = randomizer.Next(200, 1001);
+                subtrahend = randomizer.Next(50, minuend);
+
+                multiplicand = randomizer.Next(10, 31);
+                multiplier = randomizer.Next(10, 31);
+
+                divisor = randomizer.Next(5, 21);
+                int temporaryQuotient = randomizer.Next(5, 21);
+                dividend = divisor * temporaryQuotient;
+            }
 
             plusLeftLabel.Text = addend1.ToString();
             plusRightLabel.Text = addend2.ToString();
 
-            sum.Value = 0;
-
-
-            minuend = randomizer.Next(1, 101);
-            subtrahend = randomizer.Next(1, minuend);
-
             minusLeftLabel.Text = minuend.ToString();
             minusRightLabel.Text = subtrahend.ToString();
-
-            difference.Value = 0;
-
-
-            multiplicand = randomizer.Next(2, 11);
-            multiplier = randomizer.Next(2, 11);
 
             timesLeftLabel.Text = multiplicand.ToString();
             timesRightLabel.Text = multiplier.ToString();
 
-            product.Value = 0;
-
-
-            divisor = randomizer.Next(2, 11);
-
-            int temporaryQuotient = randomizer.Next(2, 11);
-
-            dividend = divisor * temporaryQuotient;
-
             dividedLeftLabel.Text = dividend.ToString();
             dividedRightLabel.Text = divisor.ToString();
 
+            sum.Value = 0;
+            difference.Value = 0;
+            product.Value = 0;
             quotient.Value = 0;
 
- 
-            timeLeft = 30;
-
-            timeLabel.Text = "30 sekundit";
-            timeLabel.BackColor = Color.LightGray;
+            timeLabel.Text = timeLeft + " sekundit";
+            timeLabel.BackColor = Color.LightGreen;
             timeLabel.ForeColor = Color.Black;
 
             timer1.Start();
@@ -257,15 +326,19 @@ namespace KolmRakendust_Puhtejev
 
         private bool CheckTheAnswer()
         {
-            if ((addend1 + addend2 == sum.Value)
-                && (minuend - subtrahend == difference.Value)
-                && (multiplicand * multiplier == product.Value)
-                && (dividend / divisor == quotient.Value))
-            {
-                return true;
-            }
+            return
+                (addend1 + addend2 == sum.Value) &&
+                (minuend - subtrahend == difference.Value) &&
+                (multiplicand * multiplier == product.Value) &&
+                (dividend / divisor == quotient.Value);
+        }
 
-            return false;
+        private int CalculateScore()
+        {
+            int basePoints = 100 * difficultyMultiplier;
+            int speedBonus = timeLeft * 10 * difficultyMultiplier;
+
+            return basePoints + speedBonus;
         }
 
         private void startButton_Click(object sender, EventArgs e)
@@ -273,6 +346,7 @@ namespace KolmRakendust_Puhtejev
             StartTheQuiz();
 
             startButton.Enabled = false;
+            difficultyComboBox.Enabled = false;
 
             sum.Focus();
         }
@@ -283,23 +357,38 @@ namespace KolmRakendust_Puhtejev
             {
                 timer1.Stop();
 
+                int earnedPoints = CalculateScore();
+
+                score += earnedPoints;
+                scoreLabel.Text = score.ToString();
+
                 timeLabel.Text = "Õige!";
                 timeLabel.BackColor = Color.LightGreen;
+                timeLabel.ForeColor = Color.Black;
 
                 SystemSounds.Asterisk.Play();
 
                 MessageBox.Show(
-                    "Kõik vastused on õiged!",
+                    "Kõik vastused on õiged!\n\n" +
+                    "Raskus: " + currentDifficulty + "\n" +
+                    "Teenitud punktid: " + earnedPoints + "\n" +
+                    "Kokku punktid: " + score,
                     "Tubli!"
                 );
 
                 startButton.Enabled = true;
+                difficultyComboBox.Enabled = true;
             }
             else if (timeLeft > 0)
             {
                 timeLeft--;
 
                 timeLabel.Text = timeLeft + " sekundit";
+
+                if (timeLeft <= 10)
+                {
+                    timeLabel.BackColor = Color.Orange;
+                }
 
                 if (timeLeft <= 5)
                 {
@@ -312,20 +401,22 @@ namespace KolmRakendust_Puhtejev
                 timer1.Stop();
 
                 timeLabel.Text = "Aeg on läbi!";
-                timeLabel.BackColor = Color.LightGray;
-                timeLabel.ForeColor = Color.Black;
-
-                MessageBox.Show(
-                    "Küsimused ei olnud vastatud aegselt.",
-                    "Vabandust!" 
-                );
+                timeLabel.BackColor = Color.Gray;
+                timeLabel.ForeColor = Color.White;
 
                 sum.Value = addend1 + addend2;
                 difference.Value = minuend - subtrahend;
                 product.Value = multiplicand * multiplier;
                 quotient.Value = dividend / divisor;
 
+                MessageBox.Show(
+                    "Aeg on läbi!\n\n" +
+                    "Sinu punktid: " + score,
+                    "Mäng läbi"
+                );
+
                 startButton.Enabled = true;
+                difficultyComboBox.Enabled = true;
             }
         }
 
@@ -335,7 +426,10 @@ namespace KolmRakendust_Puhtejev
 
             if (answerBox != null)
             {
-                answerBox.Select(0, answerBox.Value.ToString().Length);
+                answerBox.Select(
+                    0,
+                    answerBox.Value.ToString().Length
+                );
             }
         }
     }
