@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
+using System.Linq;
 using System.Media;
 using System.Windows.Forms;
 
@@ -49,9 +51,12 @@ namespace KolmRakendust_Puhtejev
         NumericUpDown quotient;
 
         Button startButton;
+        Button leaderboardButton;
         ComboBox difficultyComboBox;
 
         System.Windows.Forms.Timer timer1;
+
+        string leaderboardFile = "leaderboard.txt";
 
         public mathMang()
         {
@@ -62,7 +67,7 @@ namespace KolmRakendust_Puhtejev
         private void CreateMathQuizUI()
         {
             this.Text = "Matemaatiline Mäng";
-            this.Size = new Size(550, 520);
+            this.Size = new Size(550, 570);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.Fixed3D;
             this.MaximizeBox = false;
@@ -186,6 +191,14 @@ namespace KolmRakendust_Puhtejev
             startButton.BackColor = Color.LightGreen;
             startButton.Click += startButton_Click;
             this.Controls.Add(startButton);
+
+            leaderboardButton = new Button();
+            leaderboardButton.Text = "Leaderboard";
+            leaderboardButton.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            leaderboardButton.Size = new Size(220, 40);
+            leaderboardButton.Location = new Point(155, 450);
+            leaderboardButton.Click += leaderboardButton_Click;
+            this.Controls.Add(leaderboardButton);
 
             timer1 = new System.Windows.Forms.Timer();
             timer1.Interval = 1000;
@@ -368,13 +381,21 @@ namespace KolmRakendust_Puhtejev
 
                 SystemSounds.Asterisk.Play();
 
-                MessageBox.Show(
+                DialogResult result = MessageBox.Show(
                     "Kõik vastused on õiged!\n\n" +
                     "Raskus: " + currentDifficulty + "\n" +
                     "Teenitud punktid: " + earnedPoints + "\n" +
-                    "Kokku punktid: " + score,
-                    "Tubli!"
+                    "Kokku punktid: " + score +
+                    "\n\nKas soovid oma tulemuse leaderboard'i salvestada?",
+                    "Tubli!",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Information
                 );
+
+                if (result == DialogResult.Yes)
+                {
+                    AskForNickname();
+                }
 
                 startButton.Enabled = true;
                 difficultyComboBox.Enabled = true;
@@ -418,6 +439,191 @@ namespace KolmRakendust_Puhtejev
                 startButton.Enabled = true;
                 difficultyComboBox.Enabled = true;
             }
+        }
+
+        private void AskForNickname()
+        {
+            Form nicknameForm = new Form();
+
+            nicknameForm.Text = "Leaderboard";
+            nicknameForm.Size = new Size(350, 190);
+            nicknameForm.StartPosition = FormStartPosition.CenterParent;
+            nicknameForm.FormBorderStyle = FormBorderStyle.FixedDialog;
+            nicknameForm.MaximizeBox = false;
+            nicknameForm.MinimizeBox = false;
+
+            Label label = new Label();
+            label.Text = "Sisesta oma kasutajanimi:";
+            label.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            label.AutoSize = true;
+            label.Location = new Point(35, 25);
+
+            TextBox nicknameBox = new TextBox();
+            nicknameBox.Font = new Font("Segoe UI", 12F);
+            nicknameBox.Size = new Size(260, 30);
+            nicknameBox.Location = new Point(35, 55);
+
+            Button saveButton = new Button();
+            saveButton.Text = "Salvesta";
+            saveButton.Size = new Size(100, 35);
+            saveButton.Location = new Point(80, 100);
+            saveButton.DialogResult = DialogResult.OK;
+
+            Button cancelButton = new Button();
+            cancelButton.Text = "Tühista";
+            cancelButton.Size = new Size(100, 35);
+            cancelButton.Location = new Point(185, 100);
+            cancelButton.DialogResult = DialogResult.Cancel;
+
+            nicknameForm.Controls.Add(label);
+            nicknameForm.Controls.Add(nicknameBox);
+            nicknameForm.Controls.Add(saveButton);
+            nicknameForm.Controls.Add(cancelButton);
+
+            nicknameForm.AcceptButton = saveButton;
+            nicknameForm.CancelButton = cancelButton;
+
+            nicknameBox.Focus();
+
+            if (nicknameForm.ShowDialog(this) == DialogResult.OK)
+            {
+                string nickname = nicknameBox.Text.Trim();
+
+                if (string.IsNullOrWhiteSpace(nickname))
+                {
+                    MessageBox.Show(
+                        "Palun sisesta nimi!",
+                        "Viga",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+
+                    return;
+                }
+
+                nickname = nickname
+                    .Replace("|", "")
+                    .Replace("\r", "")
+                    .Replace("\n", "");
+
+                SaveScore(nickname, score, currentDifficulty);
+            }
+        }
+
+        private void SaveScore(string nickname, int points, string difficulty)
+        {
+            string line =
+                nickname + "|" +
+                points + "|" +
+                difficulty + "|" +
+                DateTime.Now.ToString("dd.MM.yyyy HH:mm");
+
+            File.AppendAllText(
+                leaderboardFile,
+                line + Environment.NewLine
+            );
+
+            MessageBox.Show(
+                "Tulemus on leaderboard'i salvestatud!",
+                "Salvestatud",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information
+            );
+        }
+
+        private void leaderboardButton_Click(object sender, EventArgs e)
+        {
+            ShowLeaderboard();
+        }
+
+        private void ShowLeaderboard()
+        {
+            Form leaderboardForm = new Form();
+
+            leaderboardForm.Text = "Leaderboard";
+            leaderboardForm.Size = new Size(650, 500);
+            leaderboardForm.StartPosition = FormStartPosition.CenterParent;
+            leaderboardForm.FormBorderStyle = FormBorderStyle.FixedDialog;
+            leaderboardForm.MaximizeBox = false;
+
+            Label title = new Label();
+            title.Text = "LEADERBOARD";
+            title.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
+            title.AutoSize = true;
+            title.Location = new Point(230, 15);
+
+            ListView listView = new ListView();
+            listView.View = View.Details;
+            listView.FullRowSelect = true;
+            listView.GridLines = true;
+            listView.Font = new Font("Segoe UI", 10F);
+            listView.Location = new Point(25, 65);
+            listView.Size = new Size(585, 340);
+
+            listView.Columns.Add("№", 45);
+            listView.Columns.Add("Nimi", 180);
+            listView.Columns.Add("Punktid", 90);
+            listView.Columns.Add("Raskus", 100);
+            listView.Columns.Add("Kuupäev", 150);
+
+            if (File.Exists(leaderboardFile))
+            {
+                string[] lines = File.ReadAllLines(leaderboardFile);
+
+                var results = lines
+                    .Select(line => line.Split('|'))
+                    .Where(parts => parts.Length >= 4)
+                    .Select(parts => new
+                    {
+                        Name = parts[0],
+                        Points = int.TryParse(parts[1], out int p) ? p : 0,
+                        Difficulty = parts[2],
+                        Date = parts[3]
+                    })
+                    .OrderByDescending(x => x.Points)
+                    .ToList();
+
+                int position = 1;
+
+                foreach (var result in results)
+                {
+                    ListViewItem item = new ListViewItem(position.ToString());
+
+                    item.SubItems.Add(result.Name);
+                    item.SubItems.Add(result.Points.ToString());
+                    item.SubItems.Add(result.Difficulty);
+                    item.SubItems.Add(result.Date);
+
+                    listView.Items.Add(item);
+
+                    position++;
+                }
+            }
+
+            if (listView.Items.Count == 0)
+            {
+                ListViewItem emptyItem =
+                    new ListViewItem("");
+
+                emptyItem.SubItems.Add("Leaderboard on tühi");
+
+                listView.Items.Add(emptyItem);
+            }
+
+            Button closeButton = new Button();
+            closeButton.Text = "Sulge";
+            closeButton.Size = new Size(120, 40);
+            closeButton.Location = new Point(255, 415);
+            closeButton.Click += (sender, e) =>
+            {
+                leaderboardForm.Close();
+            };
+
+            leaderboardForm.Controls.Add(title);
+            leaderboardForm.Controls.Add(listView);
+            leaderboardForm.Controls.Add(closeButton);
+
+            leaderboardForm.ShowDialog(this);
         }
 
         private void answer_Enter(object sender, EventArgs e)
