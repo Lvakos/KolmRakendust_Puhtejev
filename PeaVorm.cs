@@ -10,8 +10,7 @@ namespace KolmRakendust_Puhtejev
 {
     public partial class PeaVorm : Form
     {
-        private Button nuppVike;
-        private Button nuppKeskmine;
+        private Button nuppVike, nuppKeskmine, nuppSuur;
 
         public PeaVorm()
         {
@@ -33,9 +32,16 @@ namespace KolmRakendust_Puhtejev
             nuppKeskmine.Size = new Size(280, 40);
             nuppKeskmine.Click += NuppKeskmine_Click;
 
+            nuppSuur = new Button();
+            nuppSuur.Text = "Ava suur aken";
+            nuppSuur.Location = new Point(50, 130);
+            nuppSuur.Size = new Size(280, 40);
+            nuppSuur.Click += nuppSuur_Click;
+
             // Lisame nupud avavormile
             Controls.Add(nuppVike);
             Controls.Add(nuppKeskmine);
+            Controls.Add(nuppSuur);
         }
 
         private void NuppVike_Click(object sender, EventArgs e)
@@ -49,6 +55,12 @@ namespace KolmRakendust_Puhtejev
         {
             mathMang keskmineVorm = new mathMang();
             keskmineVorm.Show();
+        }
+
+        private void nuppSuur_Click(object sender, EventArgs e)
+        {
+            ModeValimineVorm suurVorm = new ModeValimineVorm();
+            suurVorm.Show();
         }
     }
 }
