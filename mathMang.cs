@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Media;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -52,6 +53,7 @@ namespace KolmRakendust_Puhtejev
 
         Button startButton;
         Button leaderboardButton;
+        Button finishButton;
         ComboBox difficultyComboBox;
 
         System.Windows.Forms.Timer timer1;
@@ -67,7 +69,7 @@ namespace KolmRakendust_Puhtejev
         private void CreateMathQuizUI()
         {
             this.Text = "Matemaatiline Mäng";
-            this.Size = new Size(550, 570);
+            this.Size = new Size(550, 620);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.Fixed3D;
             this.MaximizeBox = false;
@@ -192,11 +194,22 @@ namespace KolmRakendust_Puhtejev
             startButton.Click += startButton_Click;
             this.Controls.Add(startButton);
 
+            // mängu lõpetamise nupp
+            finishButton = new Button();
+            finishButton.Text = "Lõpeta mäng";
+            finishButton.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            finishButton.Size = new Size(220, 40);
+            finishButton.Location = new Point(155, 445);
+            finishButton.BackColor = Color.LightCoral;
+            finishButton.Enabled = false;
+            finishButton.Click += finishButton_Click;
+            this.Controls.Add(finishButton);
+
             leaderboardButton = new Button();
             leaderboardButton.Text = "Leaderboard";
             leaderboardButton.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             leaderboardButton.Size = new Size(220, 40);
-            leaderboardButton.Location = new Point(155, 450);
+            leaderboardButton.Location = new Point(155, 495);
             leaderboardButton.Click += leaderboardButton_Click;
             this.Controls.Add(leaderboardButton);
 
@@ -330,6 +343,9 @@ namespace KolmRakendust_Puhtejev
             product.Value = 0;
             quotient.Value = 0;
 
+            // eemaldame eelmise mängu värvid
+            ResetAnswerColors();
+
             timeLabel.Text = timeLeft + " sekundit";
             timeLabel.BackColor = Color.LightGreen;
             timeLabel.ForeColor = Color.Black;
@@ -359,6 +375,7 @@ namespace KolmRakendust_Puhtejev
             StartTheQuiz();
 
             startButton.Enabled = false;
+            finishButton.Enabled = true;
             difficultyComboBox.Enabled = false;
 
             sum.Focus();
@@ -381,26 +398,12 @@ namespace KolmRakendust_Puhtejev
 
                 SystemSounds.Asterisk.Play();
 
-                DialogResult result = MessageBox.Show(
-                    "Kõik vastused on õiged!\n\n" +
-                    "Raskus: " + currentDifficulty + "\n" +
-                    "Teenitud punktid: " + earnedPoints + "\n" +
-                    "Kokku punktid: " + score +
-                    "\n\nKas soovid oma tulemuse leaderboard'i salvestada?",
-                    "Tubli!",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Information
-                );
+                ShowResults("Kõik vastused on õiged!");
 
-                if (result == DialogResult.Yes)
-                {
-                    AskForNickname();
-                }
-
-                startButton.Enabled = true;
-                difficultyComboBox.Enabled = true;
+                return;
             }
-            else if (timeLeft > 0)
+
+            if (timeLeft > 0)
             {
                 timeLeft--;
 
@@ -425,20 +428,116 @@ namespace KolmRakendust_Puhtejev
                 timeLabel.BackColor = Color.Gray;
                 timeLabel.ForeColor = Color.White;
 
-                sum.Value = addend1 + addend2;
-                difference.Value = minuend - subtrahend;
-                product.Value = multiplicand * multiplier;
-                quotient.Value = dividend / divisor;
-
-                MessageBox.Show(
-                    "Aeg on läbi!\n\n" +
-                    "Sinu punktid: " + score,
-                    "Mäng läbi"
-                );
+                ShowResults("Aeg on läbi!");
 
                 startButton.Enabled = true;
+                finishButton.Enabled = false;
                 difficultyComboBox.Enabled = true;
             }
+        }
+
+        // mängu saab lõpetada enne aja lõppu
+        private void finishButton_Click(object sender, EventArgs e)
+        {
+            timer1.Stop();
+
+            timeLabel.Text = "Mäng lõpetatud";
+            timeLabel.BackColor = Color.Gray;
+            timeLabel.ForeColor = Color.White;
+
+            ShowResults("Mäng lõpetati enne aja lõppu!");
+
+            startButton.Enabled = true;
+            finishButton.Enabled = false;
+            difficultyComboBox.Enabled = true;
+        }
+
+        // näitab mängu lõpus õiged ja valed vastused
+        private void ShowResults(string message)
+        {
+            int correctAnswers = 0;
+
+            // liitmine
+            if (sum.Value == addend1 + addend2)
+            {
+                sum.BackColor = Color.LightGreen;
+                correctAnswers++;
+            }
+            else
+            {
+                sum.BackColor = Color.LightCoral;
+            }
+
+            // lahutamine
+            if (difference.Value == minuend - subtrahend)
+            {
+                difference.BackColor = Color.LightGreen;
+                correctAnswers++;
+            }
+            else
+            {
+                difference.BackColor = Color.LightCoral;
+            }
+
+            // korrutamine
+            if (product.Value == multiplicand * multiplier)
+            {
+                product.BackColor = Color.LightGreen;
+                correctAnswers++;
+            }
+            else
+            {
+                product.BackColor = Color.LightCoral;
+            }
+
+            // jagamine
+            if (quotient.Value == dividend / divisor)
+            {
+                quotient.BackColor = Color.LightGreen;
+                correctAnswers++;
+            }
+            else
+            {
+                quotient.BackColor = Color.LightCoral;
+            }
+
+            MessageBox.Show(
+                message + "\n\n" +
+                "Õigeid vastuseid: " + correctAnswers + " / 4\n" +
+                "Vale vastuseid: " + (4 - correctAnswers) + "\n" +
+                "Punktid: " + score,
+                "Mängu tulemus",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information
+            );
+
+            // kui kõik neli vastust olid õiged
+            if (correctAnswers == 4)
+            {
+                DialogResult result = MessageBox.Show(
+                    "Kõik vastused on õiged!\n\n" +
+                    "Raskus: " + currentDifficulty +
+                    "\nPunktid: " + score +
+                    "\n\nKas soovid oma tulemuse leaderboard'i salvestada?",
+                    "Tubli!",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Information
+                );
+
+                if (result == DialogResult.Yes)
+                {
+                    AskForNickname();
+                }
+            }
+        }
+
+        // eemaldame eelmise mängu värvid
+        private void ResetAnswerColors()
+        {
+            sum.BackColor = SystemColors.Window;
+            difference.BackColor = SystemColors.Window;
+            product.BackColor = SystemColors.Window;
+            quotient.BackColor = SystemColors.Window;
         }
 
         private void AskForNickname()
@@ -587,7 +686,8 @@ namespace KolmRakendust_Puhtejev
 
                 foreach (var result in results)
                 {
-                    ListViewItem item = new ListViewItem(position.ToString());
+                    ListViewItem item =
+                        new ListViewItem(position.ToString());
 
                     item.SubItems.Add(result.Name);
                     item.SubItems.Add(result.Points.ToString());
