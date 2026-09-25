@@ -17,6 +17,7 @@ namespace KolmRakendust_Puhtejev
             StartPosition = FormStartPosition.CenterScreen;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
+            this.MaximizeBox = false;
 
             Label title = new Label
             {
@@ -52,7 +53,7 @@ namespace KolmRakendust_Puhtejev
             {
                 Hide();
 
-                Form2 game = new Form2(4);
+                piltideMang game = new piltideMang(4);
                 game.FormClosed += (s, args) => Show();
                 game.Show();
             };
@@ -61,7 +62,7 @@ namespace KolmRakendust_Puhtejev
             {
                 Hide();
 
-                Form2 game = new Form2(6);
+                piltideMang game = new piltideMang(6);
                 game.FormClosed += (s, args) => Show();
                 game.Show();
             };

@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -7,7 +8,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace KolmRakendust_Puhtejev
 {
-    public partial class Form2 : Form
+    public partial class piltideMang : Form
     {
         private readonly Random random = new Random();
 
@@ -29,6 +30,10 @@ namespace KolmRakendust_Puhtejev
         private Label secondClicked;
         private System.Windows.Forms.Timer hideTimer;
         private System.Windows.Forms.Timer gameTimer;
+        private System.Windows.Forms.Timer hintTimer;
+        private System.Windows.Forms.Timer hintHideTimer;
+
+        private Button hintButton;
 
         private int moves = 0;
         private int matchedPairs = 0;
@@ -42,7 +47,7 @@ namespace KolmRakendust_Puhtejev
         private Label pointsLabel;
         private Label timeLabel;
 
-        public Form2(int size)
+        public piltideMang(int size)
         {
             InitializeComponent();
 
@@ -144,10 +149,25 @@ namespace KolmRakendust_Puhtejev
                 ForeColor = Color.Black
             };
 
+            // nupp vihje jaoks
+            hintButton = new Button
+            {
+                Text = "Vihje",
+                Width = 100,
+                Height = 35,
+                Left = 215,
+                Top = 40,
+                Enabled = false,
+                Font = new System.Drawing.Font("Arial", 10, FontStyle.Bold)
+            };
+
+            hintButton.Click += HintButton_Click;
+
             infoPanel.Controls.Add(movesLabel);
             infoPanel.Controls.Add(pairsLabel);
             infoPanel.Controls.Add(pointsLabel);
             infoPanel.Controls.Add(timeLabel);
+            infoPanel.Controls.Add(hintButton);
 
             Controls.Add(infoPanel);
 
@@ -197,6 +217,22 @@ namespace KolmRakendust_Puhtejev
             };
 
             gameTimer.Tick += GameTimer_Tick;
+
+            // таймер для появления возможности использовать подсказку
+            hintTimer = new System.Windows.Forms.Timer
+            {
+                Interval = 30000
+            };
+
+            hintTimer.Tick += HintTimer_Tick;
+
+            // таймер, который показывает подсказку некоторое время
+            hintHideTimer = new System.Windows.Forms.Timer
+            {
+                Interval = 2000
+            };
+
+            hintHideTimer.Tick += HintHideTimer_Tick;
 
             AssignIcons();
 
@@ -260,7 +296,7 @@ namespace KolmRakendust_Puhtejev
 
         private void Card_Click(object sender, EventArgs e)
         {
-            if (hideTimer.Enabled)
+            if (hideTimer.Enabled || hintHideTimer.Enabled)
                 return;
 
             Label clickedCard = sender as Label;
@@ -275,6 +311,9 @@ namespace KolmRakendust_Puhtejev
             if (!gameTimer.Enabled)
             {
                 gameTimer.Start();
+
+                // запускаем отсчёт времени для первой подсказки
+                hintTimer.Start();
             }
 
             if (firstClicked == null)
@@ -333,6 +372,63 @@ namespace KolmRakendust_Puhtejev
                 "Aeg: " + seconds + " s";
         }
 
+        // каждые 30 секунд кнопка подсказки становится доступной
+        private void HintTimer_Tick(object sender, EventArgs e)
+        {
+            hintButton.Enabled = true;
+            hintButton.Text = "Vihje!";
+        }
+
+        // кнопка подсказки
+        private void HintButton_Click(object sender, EventArgs e)
+        {
+            if (!hintButton.Enabled)
+                return;
+
+            hintButton.Enabled = false;
+            hintButton.Text = "Oota...";
+
+            // показываем все закрытые карты
+            foreach (Control control in gameBoard.Controls)
+            {
+                Label card = control as Label;
+
+                if (card == null)
+                    continue;
+
+                if (card.ForeColor == card.BackColor)
+                {
+                    card.ForeColor = Color.Black;
+                }
+            }
+
+            // через 2 секунды снова закрываем карты
+            hintHideTimer.Start();
+        }
+
+        // скрываем карты после подсказки
+        private void HintHideTimer_Tick(object sender, EventArgs e)
+        {
+            hintHideTimer.Stop();
+
+            foreach (Control control in gameBoard.Controls)
+            {
+                Label card = control as Label;
+
+                if (card == null)
+                    continue;
+
+                // оставляем найденные пары открытыми
+                if (card.ForeColor != Color.Green)
+                {
+                    card.ForeColor = card.BackColor;
+                }
+            }
+
+            // запускаем новый отсчёт 30 секунд
+            hintTimer.Start();
+        }
+
         private void HideTimer_Tick(object sender, EventArgs e)
         {
             hideTimer.Stop();
@@ -359,6 +455,8 @@ namespace KolmRakendust_Puhtejev
                 return;
 
             gameTimer.Stop();
+            hintTimer.Stop();
+            hintHideTimer.Stop();
 
             DialogResult result = MessageBox.Show(
                 "Palju õnne!\n\n" +
@@ -386,6 +484,8 @@ namespace KolmRakendust_Puhtejev
         {
             hideTimer.Stop();
             gameTimer.Stop();
+            hintTimer.Stop();
+            hintHideTimer.Stop();
 
             firstClicked = null;
             secondClicked = null;
@@ -399,6 +499,9 @@ namespace KolmRakendust_Puhtejev
             pairsLabel.Text = "Paarid: 0 / " + totalPairs;
             pointsLabel.Text = "Punktid: 0";
             timeLabel.Text = "Aeg: 0 s";
+
+            hintButton.Enabled = false;
+            hintButton.Text = "Vihje";
 
             foreach (Control control in gameBoard.Controls)
             {
@@ -417,6 +520,9 @@ namespace KolmRakendust_Puhtejev
         {
             hideTimer.Stop();
             gameTimer.Stop();
+            hintTimer.Stop();
+            hintHideTimer.Stop();
+
             Close();
         }
     }
