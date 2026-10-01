@@ -64,6 +64,7 @@ namespace KolmRakendust_Puhtejev
             StartPosition = FormStartPosition.CenterScreen;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
+            this.BackColor = ColorTranslator.FromHtml("#121212");
 
             Label title = new Label
             {
@@ -72,7 +73,7 @@ namespace KolmRakendust_Puhtejev
                 Height = 55,
                 TextAlign = ContentAlignment.MiddleCenter,
                 Font = new System.Drawing.Font("Arial", 20, FontStyle.Bold),
-                ForeColor = Color.Black
+                ForeColor = Color.White
             };
 
             Controls.Add(title);
@@ -88,6 +89,8 @@ namespace KolmRakendust_Puhtejev
             };
 
             backButton.Click += BackButton_Click;
+            backButton.BackColor = Color.White;
+            backButton.ForeColor = Color.Black;
 
             Controls.Add(backButton);
 
@@ -107,7 +110,7 @@ namespace KolmRakendust_Puhtejev
                 Top = 5,
                 TextAlign = ContentAlignment.MiddleLeft,
                 Font = new System.Drawing.Font("Arial", 11, FontStyle.Bold),
-                ForeColor = Color.Black
+                ForeColor = Color.White
             };
 
             pairsLabel = new Label
@@ -120,7 +123,7 @@ namespace KolmRakendust_Puhtejev
                 Top = 5,
                 TextAlign = ContentAlignment.MiddleLeft,
                 Font = new System.Drawing.Font("Arial", 11, FontStyle.Bold),
-                ForeColor = Color.Black
+                ForeColor = Color.White
             };
 
             pointsLabel = new Label
@@ -133,7 +136,7 @@ namespace KolmRakendust_Puhtejev
                 Top = 5,
                 TextAlign = ContentAlignment.MiddleLeft,
                 Font = new System.Drawing.Font("Arial", 11, FontStyle.Bold),
-                ForeColor = Color.Black
+                ForeColor = Color.White
             };
 
             timeLabel = new Label
@@ -146,7 +149,7 @@ namespace KolmRakendust_Puhtejev
                 Top = 40,
                 TextAlign = ContentAlignment.MiddleLeft,
                 Font = new System.Drawing.Font("Arial", 11, FontStyle.Bold),
-                ForeColor = Color.Black
+                ForeColor = Color.White
             };
 
             // nupp vihje jaoks
@@ -162,6 +165,8 @@ namespace KolmRakendust_Puhtejev
             };
 
             hintButton.Click += HintButton_Click;
+            hintButton.BackColor = Color.White;
+            hintButton.ForeColor = Color.Black;
 
             infoPanel.Controls.Add(movesLabel);
             infoPanel.Controls.Add(pairsLabel);

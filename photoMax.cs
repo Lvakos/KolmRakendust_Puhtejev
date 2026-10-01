@@ -31,6 +31,7 @@ namespace KolmRakendust_Puhtejev
 
         public photoMax()
         {
+            this.BackColor = ColorTranslator.FromHtml("#121212");
             dialog = new SaveFileDialog();
             dialog.Filter = "JPEG Files (*.jpg)|*.jpg|PNG Files (*.png)|*.png|BMP Files (*.bmp)|*.bmp|All files (*.*)|*.*";
             dialog.Title = "Salvesta pilt";
@@ -105,66 +106,90 @@ namespace KolmRakendust_Puhtejev
             close.Text = "Sule";
             close.AutoSize = true;
             close.MouseClick += Close_MouseClick;
+            close.BackColor = Color.White;
+            close.ForeColor = Color.Black;
 
             save = new Button();
             save.Text = "Salvesta";
             save.AutoSize = true;
             save.MouseClick += Save_MouseClick;
+            save.BackColor = Color.White;
+            save.ForeColor = Color.Black;
 
             appbackground = new Button();
             appbackground.Text = "Terve vormi taust";
             appbackground.AutoSize = true;
             appbackground.MouseClick += Appbackground_MouseClick;
+            appbackground.BackColor = Color.White;
+            appbackground.ForeColor = Color.Black;
 
             background = new Button();
             background.Text = "Määra taust";
             background.AutoSize = true;
             background.MouseClick += Background_MouseClick;
+            background.BackColor = Color.White;
+            background.ForeColor = Color.Black;
 
             clear = new Button();
             clear.Text = "Selge pilt";
             clear.AutoSize = true;
             clear.MouseClick += Clear_MouseClick;
+            clear.BackColor = Color.White;
+            clear.ForeColor = Color.Black;
 
             showpicture = new Button();
             showpicture.Text = "Näita Pilti";
             showpicture.AutoSize = true;
             showpicture.MouseClick += Showpicture_MouseClick;
+            showpicture.BackColor = Color.White;
+            showpicture.ForeColor = Color.Black;
 
             // nupud piltide käsitsi vahetamiseks
             previous = new Button();
             previous.Text = "← Tagasi";
             previous.AutoSize = true;
             previous.MouseClick += Previous_MouseClick;
+            previous.BackColor = Color.White;
+            previous.ForeColor = Color.Black;
 
             next = new Button();
             next.Text = "Edasi →";
             next.AutoSize = true;
             next.MouseClick += Next_MouseClick;
+            next.BackColor = Color.White;
+            next.ForeColor = Color.Black;
 
             // slideshow nupp
             slideshow = new Button();
             slideshow.Text = "▶ Slaid-show";
             slideshow.AutoSize = true;
             slideshow.MouseClick += Slideshow_MouseClick;
+            slideshow.BackColor = Color.White;
+            slideshow.ForeColor = Color.Black;
 
             // joonistamise nupp
             draw = new Button();
             draw.Text = "Joonista";
             draw.AutoSize = true;
             draw.MouseClick += Draw_MouseClick;
+            draw.BackColor = Color.White;
+            draw.ForeColor = Color.Black;
 
             // värvi nupp
             color = new Button();
             color.Text = "Värv";
             color.AutoSize = true;
             color.MouseClick += Color_MouseClick;
+            color.BackColor = Color.White;
+            color.ForeColor = Color.Black;
 
             // joonistuse kustutamise nupp
             clearDraw = new Button();
             clearDraw.Text = "Kustuta joonistus";
             clearDraw.AutoSize = true;
             clearDraw.MouseClick += ClearDraw_MouseClick;
+            clearDraw.BackColor = Color.White;
+            clearDraw.ForeColor = Color.Black;
 
             panel.Controls.Add(flow, 1, 1);
 

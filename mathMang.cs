@@ -71,6 +71,7 @@ namespace KolmRakendust_Puhtejev
             this.Text = "Matemaatiline Mäng";
             this.Size = new Size(550, 620);
             this.StartPosition = FormStartPosition.CenterScreen;
+            this.BackColor = ColorTranslator.FromHtml("#121212");
             this.FormBorderStyle = FormBorderStyle.Fixed3D;
             this.MaximizeBox = false;
 
@@ -79,6 +80,7 @@ namespace KolmRakendust_Puhtejev
             titleLabel.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
             titleLabel.AutoSize = true;
             titleLabel.Location = new Point(120, 15);
+            titleLabel.ForeColor = Color.White;
             this.Controls.Add(titleLabel);
 
             difficultyLabel = new Label();
@@ -86,6 +88,7 @@ namespace KolmRakendust_Puhtejev
             difficultyLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             difficultyLabel.AutoSize = true;
             difficultyLabel.Location = new Point(45, 70);
+            difficultyLabel.ForeColor = Color.White;
             this.Controls.Add(difficultyLabel);
 
             difficultyComboBox = new ComboBox();
@@ -104,6 +107,7 @@ namespace KolmRakendust_Puhtejev
             scoreTextLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             scoreTextLabel.AutoSize = true;
             scoreTextLabel.Location = new Point(285, 70);
+            scoreTextLabel.ForeColor = Color.White;
             this.Controls.Add(scoreTextLabel);
 
             scoreLabel = new Label();
@@ -111,6 +115,7 @@ namespace KolmRakendust_Puhtejev
             scoreLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             scoreLabel.AutoSize = true;
             scoreLabel.Location = new Point(355, 70);
+            scoreLabel.ForeColor = Color.White;
             this.Controls.Add(scoreLabel);
 
             Label timeTextLabel = new Label();
@@ -118,6 +123,7 @@ namespace KolmRakendust_Puhtejev
             timeTextLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             timeTextLabel.AutoSize = true;
             timeTextLabel.Location = new Point(285, 105);
+            timeTextLabel.ForeColor = Color.White;
             this.Controls.Add(timeTextLabel);
 
             timeLabel = new Label();
@@ -190,7 +196,8 @@ namespace KolmRakendust_Puhtejev
             startButton.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
             startButton.Size = new Size(220, 50);
             startButton.Location = new Point(155, 390);
-            startButton.BackColor = Color.LightGreen;
+            startButton.BackColor = Color.White;
+            startButton.ForeColor = Color.Black;
             startButton.Click += startButton_Click;
             this.Controls.Add(startButton);
 
@@ -200,7 +207,8 @@ namespace KolmRakendust_Puhtejev
             finishButton.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             finishButton.Size = new Size(220, 40);
             finishButton.Location = new Point(155, 445);
-            finishButton.BackColor = Color.LightCoral;
+            finishButton.BackColor = Color.White;
+            finishButton.ForeColor = Color.Black;
             finishButton.Enabled = false;
             finishButton.Click += finishButton_Click;
             this.Controls.Add(finishButton);
@@ -210,6 +218,8 @@ namespace KolmRakendust_Puhtejev
             leaderboardButton.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             leaderboardButton.Size = new Size(220, 40);
             leaderboardButton.Location = new Point(155, 495);
+            leaderboardButton.BackColor = Color.White;
+            leaderboardButton.ForeColor = Color.Black;
             leaderboardButton.Click += leaderboardButton_Click;
             this.Controls.Add(leaderboardButton);
 
@@ -238,6 +248,7 @@ namespace KolmRakendust_Puhtejev
             label.Size = new Size(60, 40);
             label.Location = new Point(x, y);
             label.TextAlign = ContentAlignment.MiddleCenter;
+            label.ForeColor = Color.White;
             return label;
         }
 
@@ -249,6 +260,7 @@ namespace KolmRakendust_Puhtejev
             label.Size = new Size(40, 40);
             label.Location = new Point(x, y);
             label.TextAlign = ContentAlignment.MiddleCenter;
+            label.ForeColor = Color.White;
             return label;
         }
 

@@ -18,28 +18,37 @@ namespace KolmRakendust_Puhtejev
             Text = "Peaaken - Valikud";
             Size = new Size(400, 300);
             StartPosition = FormStartPosition.CenterScreen;
+            this.BackColor = ColorTranslator.FromHtml("#121212");
             this.MaximizeBox = false;
 
-            // 1. Nupp: Väike aken
+            // 1. Nupp: PhotoMax
             nuppVike = new Button();
             nuppVike.Text = "PhotoMax (piltide vaatamine)";
             nuppVike.Location = new Point(50, 30);
             nuppVike.Size = new Size(280, 40);
             nuppVike.Click += NuppVike_Click;
+            nuppVike.BackColor = Color.LightSeaGreen;
+            nuppVike.ForeColor = Color.Black;
 
-            // 2. Nupp: Keskmine aken
+            // 2. Nupp: Matematiiline mäng
             nuppKeskmine = new Button();
             nuppKeskmine.Text = "Matematiiline mäng";
             nuppKeskmine.Location = new Point(50, 80);
             nuppKeskmine.Size = new Size(280, 40);
             nuppKeskmine.Click += NuppKeskmine_Click;
+            nuppKeskmine.BackColor = Color.SeaShell;
+            nuppKeskmine.ForeColor = Color.Black;
 
+            // 3. Nupp: Piltide mäng
             nuppSuur = new Button();
             nuppSuur.Text = "Piltide mäng";
             nuppSuur.Location = new Point(50, 130);
             nuppSuur.Size = new Size(280, 40);
             nuppSuur.Click += nuppSuur_Click;
+            nuppSuur.BackColor = Color.PaleVioletRed;
+            nuppSuur.ForeColor = Color.Black;
 
+            // 4. Pilt Nupp: GitHub
             github = new PictureBox();
             github.Image = Image.FromFile(@"..\..\..\pildid\github.png");
             github.Location = new Point(160, 180);

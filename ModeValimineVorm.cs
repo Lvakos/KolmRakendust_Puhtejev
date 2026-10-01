@@ -17,6 +17,7 @@ namespace KolmRakendust_Puhtejev
             StartPosition = FormStartPosition.CenterScreen;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
+            BackColor = ColorTranslator.FromHtml("#121212");
             this.MaximizeBox = false;
 
             Label title = new Label
@@ -26,7 +27,7 @@ namespace KolmRakendust_Puhtejev
                 Height = 70,
                 TextAlign = ContentAlignment.MiddleCenter,
                 Font = new Font("Arial", 24, FontStyle.Bold),
-                ForeColor = Color.Black
+                ForeColor = Color.White
             };
 
             Button button4x4 = new Button
@@ -38,6 +39,8 @@ namespace KolmRakendust_Puhtejev
                 Top = 90,
                 Font = new Font("Arial", 16, FontStyle.Bold)
             };
+            button4x4.BackColor = Color.White;
+            button4x4.ForeColor = Color.Black;
 
             Button button6x6 = new Button
             {
@@ -48,6 +51,8 @@ namespace KolmRakendust_Puhtejev
                 Top = 160,
                 Font = new Font("Arial", 16, FontStyle.Bold)
             };
+            button6x6.BackColor = Color.White;
+            button6x6.ForeColor = Color.Black;
 
             button4x4.Click += (sender, e) =>
             {
